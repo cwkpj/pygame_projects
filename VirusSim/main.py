@@ -1,9 +1,10 @@
 import random, pygame, sys, matplotlib
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 from pygame.locals import *
-from VirusSim.virus import VirusNode
-from VirusSim.doctor import Doctor
+from virus import VirusNode
+from doctor import Doctor
 pygame.init()
 
 size = (width, height) = (850, 480)
@@ -25,6 +26,7 @@ done = False
 case_samples = 10
 split_times = 10
 test_data = []
+demo = False
 
 
 def timeout():
@@ -47,7 +49,7 @@ def init():
 
 
 def end_of_round(ticks):
-    global seconds, tests, success, doc_num, bac_num, split_time, done
+    global demo, seconds, tests, success, doc_num, bac_num, split_time, done
     if display:
         timeout()
     tests += 1
@@ -60,7 +62,10 @@ def end_of_round(ticks):
         elif test_data[-1][-1] <= 75:
             doc_num += 1
         else:
-            split_time = round(split_time*0.9)
+            if demo:
+                split_time -= 1
+            else:
+                split_time = round(split_time*0.9)
             if split_time < 10:
                 done = True
         tests = 0
@@ -84,7 +89,17 @@ def process_data():
 
 
 def main():
-    global success, round_over, display
+    global demo, success, round_over, display
+
+    parser = argparse.ArgumentParser(description='Process demo mode.')
+    parser.add_argument('--demo', dest='demo', action='store_true',
+                        help='run in demo mode')
+    args = parser.parse_args()
+    demo = args.demo
+    if demo:
+        print("-- Demo mode --")
+        display = True
+
     init()
     while not done:
         if display:

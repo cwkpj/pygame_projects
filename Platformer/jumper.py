@@ -1,9 +1,11 @@
 import random
 import sys
 from pygame.locals import *
-from Platformer.sprite_loader import *
-from Platformer.player import Player
-from Platformer.platforms import Platforms
+
+from sprite_loader import *
+from player import Player
+from platformer import Platforms
+
 
 pygame.init()
 screen_info = pygame.display.Info()
